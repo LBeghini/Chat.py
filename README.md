@@ -1,4 +1,4 @@
-# Chat.py
+# :speech_balloon: Chat.py
 
 ## About
 
@@ -13,7 +13,7 @@ TCP Chat is a simple program developed for an assignment of a Computer Networks 
 ### Requirements
 To run and edit this project locally, certify that you have installed the following programs:
 
-- Python 3.8
+- [Python](https://www.python.org/downloads/)
 - A code editor
 
 After that, you'll need to clone this repo:
@@ -42,6 +42,5 @@ After that, on another ```cmd```, run the client:
 python TCPClientChat.py
 ```
 
-> You won't see any broadcast if you run just one client.  
-You need to run another client to see that happening.   
-Then, one screen will chat to another.
+> You won't see any broadcast if you run just one client. You need to run another client to see that happening.   
+Then, you'll see messages that were sended in one terminal in the others that you've opened.
