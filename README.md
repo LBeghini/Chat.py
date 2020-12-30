@@ -55,6 +55,7 @@ Just like the server, the script also accepts a default argument that tries to c
 ```
 python client.py default
 ```
+## Tips
 
 You don't need to be forever alone and send messages only to yourself. It can work between your friends!  
 It can be done using [Hamachi](https://vpn.net). You and your friends will need to download it.
