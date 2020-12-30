@@ -2,7 +2,7 @@
 
 ## About
 
-TCP Chat is a simple program developed for an assignment of a Computer Networks class. It implements the usage of TCP to send messages between Client and Server.
+Chat.py is a simple program developed for an assignment of a Computer Networks class. It implements the usage of TCP to send messages between Client and Server.
 
 ## Technologies
 
@@ -26,21 +26,49 @@ git clone https://github.com/LBeghini/Chat.py.git
 
 To run this project, you'll only need two files:
 
-- TCPServerChat.py
-- TCPClientChat.py
+- server.py
+- client.py
 
 Open ```cmd``` in the folder where you installed these files.
 
-Then, run the server:
+### Server
+
+To run the server, execute:
 ```
-python TCPServerChat.py
+python server.py
+```
+The script accepts a default argument that sets the server at localhost in the port 12000:
+
+```
+python server.py default
 ```
 
-After that, on another ```cmd```, run the client:
+### Client
+
+After setting and running the server, on another ```cmd```, run the client:
 
 ```
-python TCPClientChat.py
+python client.py
+```
+Just like the server, the script also accepts a default argument that tries to connect in localhost under the port 12000:
+
+```
+python client.py default
 ```
 
-> You won't see any broadcast if you run just one client. You need to run another client to see that happening.   
-Then, you'll see messages that were sended in one terminal in the others that you've opened.
+You don't need to be forever alone and send messages only to yourself. It can work between your friends!  
+It can be done using [Hamachi](https://vpn.net). You and your friends will need to download it.
+
+It's simple to use, and what it does is simulate that all the connections are in the same local network.
+
+After downloading it, create an network and set the IP of the ```server.py``` as the public IP given by Hamachi. The port can be settled as default.
+
+Then, ask your friends to connect with your network through Hamachi. Then, give them the file ```client.py``` with the IP and port you've settled for the server.
+
+As an last step, Windows Firewall will block Hamachi connections, but there's a way to [give permission to Hamachi](https://appuals.com/how-to-fix-inbound-traffic-blocked-on-hamachi/).
+
+And that's it!
+
+
+
+
