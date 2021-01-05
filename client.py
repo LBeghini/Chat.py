@@ -1,73 +1,13 @@
 from socket import *
 import threading
-import re
-import random
 import os
 import sys
-
-COLOR = {
-    "PURPLE": '\033[95m',
-    "CYAN": '\033[96m',
-    "DARKCYAN": '\033[36m',
-    "BLUE": '\033[94m',
-    "GREEN": '\033[92m',
-    "YELLOW": '\033[93m',
-    "RED": '\033[91m',
-    "BOLD": '\033[1m',
-    "UNDERLINE": '\033[4m',
-    "END": '\033[0m'
-}
-
-USER_COLORS = {
-    "PURPLE": '\033[95m',
-    "CYAN": '\033[96m',
-    "DARKCYAN": '\033[36m',
-    "BLUE": '\033[94m'
-}
+from connection import set_connection
+from colors import print_color, format_string
 
 CLIENT_SOCKET = socket(AF_INET, SOCK_STREAM)
 SERVER_IP = ''
 SERVER_PORT = 0
-
-
-def set_connection():
-    global SERVER_IP
-    global SERVER_PORT
-
-    while True:
-        input_server = input(f'\nSERVER IP [press enter to use default]: ')
-        if input_server == 'localhost':
-            SERVER_IP = input_server
-            break
-        elif input_server != '':
-            verify = re.fullmatch(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$', input_server)
-            if verify is None:
-                print(f'{COLOR["RED"]}\nERROR: INVALID SERVER IP{COLOR["END"]}')
-                continue
-            else:
-                SERVER_IP = input_server
-                print(f'{COLOR["YELLOW"]}\nUSING IP {SERVER_IP}...{COLOR["END"]}')
-                break
-        else:
-            SERVER_IP = 'localhost'
-            print(f'{COLOR["YELLOW"]}\nUSING IP {SERVER_IP}...{COLOR["END"]}')
-            break
-
-    while True:
-        input_port = input(f'\nPORT [press enter to use default]: ')
-        if input_port != '':
-            verify = re.fullmatch(r'^\d*$', input_port)
-            if verify is None:
-                print(f'{COLOR["RED"]}\nERROR: INVALID PORT NUMBER{COLOR["END"]}')
-                continue
-            else:
-                SERVER_PORT = int(input_port)
-                print(f'{COLOR["YELLOW"]}\nUSING PORT {SERVER_PORT}...{COLOR["END"]}')
-                break
-        else:
-            SERVER_PORT = 12000
-            print(f'{COLOR["YELLOW"]}\nUSING PORT {SERVER_PORT}...{COLOR["END"]}')
-            break
 
 
 def receive():
@@ -79,7 +19,7 @@ def receive():
             else:
                 print(message)
         except:
-            print(f'{COLOR["RED"]}An error occured!{COLOR["END"]}')
+            print_color('An error occurred!', 'red')
 
 
 def wait_for_input():
@@ -102,21 +42,20 @@ if 'default' in sys.argv:
     SERVER_IP = 'localhost'
     SERVER_PORT = 12000
 else:
-    set_connection()
+    SERVER_IP, SERVER_PORT = set_connection()
 
-print(f'{COLOR["YELLOW"]}\nOpening server...{COLOR["END"]}')
+print_color(f'\nOpening server...', 'yellow')
 
 try:
     CLIENT_SOCKET.connect((SERVER_IP, SERVER_PORT))
 except OSError as e:
-    print(f'{COLOR["RED"]}\n{e}{COLOR["END"]}')
+    print(f'\n{e}', 'red')
     exit(-1)
 
 os.system('cls')
 
 USERNAME = input('USERNAME: ')
-print(random.choice(list(COLOR.values())))
-USERNAME = f'{USER_COLORS[random.choice(list(USER_COLORS.keys()))]}{USERNAME}{COLOR["END"]}'
+USERNAME = format_string(USERNAME, 'random')
 
 receive_thread = threading.Thread(target=receive)
 receive_thread.start()

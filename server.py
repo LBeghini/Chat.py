@@ -1,82 +1,27 @@
 ﻿from socket import *
 import threading
-import re
 import os
 import sys
-
-COLOR = {
-    "PURPLE": '\033[95m',
-    "CYAN": '\033[96m',
-    "DARKCYAN": '\033[36m',
-    "BLUE": '\033[94m',
-    "GREEN": '\033[92m',
-    "YELLOW": '\033[93m',
-    "RED": '\033[91m',
-    "BOLD": '\033[1m',
-    "UNDERLINE": '\033[4m',
-    "END": '\033[0m'
-}
+from colors import print_color, format_string
+from connection import set_connection
 
 SERVER_SOCKET = socket(AF_INET, SOCK_STREAM)
-SERVER_IP = ''
-SERVER_PORT = 0
 
 CLIENTS = list()
 ADDRESSES = list()
 USERS = list()
 
-
-os.system('cls')
-
-
-def set_connection():
-    global SERVER_IP
-    global SERVER_PORT
-    global SERVER_SOCKET
-
-    while True:
-        input_server = input(f'\nSERVER IP [press enter to use default]: ')
-        if input_server == 'localhost':
-            SERVER_IP = input_server
-            break
-        elif input_server != '':
-            verify = re.fullmatch(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$', input_server)
-            if verify is None:
-                print(f'{COLOR["RED"]}\nERROR: INVALID SERVER IP{COLOR["END"]}')
-                continue
-            else:
-                SERVER_IP = input_server
-                print(f'{COLOR["YELLOW"]}\nUSING IP {SERVER_IP}...{COLOR["END"]}')
-                break
-        else:
-            SERVER_IP = 'localhost'
-            print(f'{COLOR["YELLOW"]}\nUSING IP {SERVER_IP}...{COLOR["END"]}')
-            break
-
-    while True:
-        input_port = input(f'\nPORT [press enter to use default]: ')
-        if input_port != '':
-            verify = re.fullmatch(r'^\d*$', input_port)
-            if verify is None:
-                print(f'{COLOR["RED"]}\nERROR: INVALID PORT NUMBER{COLOR["END"]}')
-                continue
-            else:
-                SERVER_PORT = int(input_port)
-                print(f'{COLOR["YELLOW"]}\nUSING PORT {SERVER_PORT}...{COLOR["END"]}')
-                break
-        else:
-            SERVER_PORT = 12000
-            print(f'{COLOR["YELLOW"]}\nUSING PORT {SERVER_PORT}...{COLOR["END"]}')
-            break
+SERVER_IP = ''
+SERVER_PORT = 0
 
 
 def print_connections():
     os.system('cls')
-    print(f'{COLOR["GREEN"]}\nReady to receive at {SERVER_IP}:{SERVER_PORT}\n{COLOR["END"]}')
+    print_color(f'\nReady to receive at {SERVER_IP}:{SERVER_PORT}\n', 'green')
     if len(ADDRESSES) > 0:
-        print(f'{COLOR["GREEN"]}\nCONNECTIONS: \n{COLOR["END"]}')
+        print_color(f'\nCONNECTIONS: \n', 'green')
     for address in ADDRESSES:
-        print(f'{COLOR["CYAN"]}\tConnected with {address}{COLOR["END"]}')
+        print_color(f'\tConnected with {address}', 'cyan')
 
 
 def broadcast(message, sender=None):
@@ -96,7 +41,7 @@ def handle(client):
             CLIENTS.remove(client)
             client.close()
             user = USERS[index]
-            broadcast(f'{COLOR["RED"]}{user} left!{COLOR["END"]}'.encode())
+            broadcast(format_string(f'{user} left!', color='red').encode())
             USERS.remove(user)
             del ADDRESSES[index]
             print_connections()
@@ -117,12 +62,13 @@ def receive():
         print_connections()
 
         broadcast(f'{user} joined'.encode(), sender=connection_socket)
-        connection_socket.send(f'{COLOR["GREEN"]}Connected to server!{COLOR["END"]}'.encode())
+        connection_socket.send(format_string(f'Connected to server!', color='green').encode())
 
         client_thread = threading.Thread(target=handle, args=(connection_socket,))
         client_thread.start()
 
 
+os.system('cls')
 print("  _______ _____ _____     _____                           \n"
       " |__   __/ ____|  __ \   / ____|                          \n"
       "    | | | |    | |__) | | (___   ___ _ ____   _____ _ __  \n"
@@ -137,18 +83,18 @@ if 'default' in sys.argv:
     SERVER_IP = 'localhost'
     SERVER_PORT = 12000
 else:
-    set_connection()
+    SERVER_IP, SERVER_PORT = set_connection()
 
-print(f'{COLOR["YELLOW"]}\nOpening server...{COLOR["END"]}')
+print_color('\nOpening server...', color='yellow')
 
 try:
     SERVER_SOCKET.bind((SERVER_IP, SERVER_PORT))
 except OSError as e:
-    print(f'{COLOR["RED"]}\n{e}{COLOR["END"]}')
+    print_color(f'\n{e}', color='red')
     exit(-1)
 
 SERVER_SOCKET.listen()
 
-print(f'{COLOR["GREEN"]}\nReady to receive at {SERVER_IP}:{SERVER_PORT}\n{COLOR["END"]}')
+print_color(f'\nReady to receive at {SERVER_IP}:{SERVER_PORT}\n', color='green')
 
 receive()
