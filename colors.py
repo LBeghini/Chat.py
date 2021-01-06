@@ -3,8 +3,21 @@ import random
 COLOR = {
     "PURPLE": '\033[95m',
     "CYAN": '\033[96m',
+    "DARKCYAN": '\033[36m',
     "BLUE": '\033[94m',
     "GREEN": '\033[92m',
+    "YELLOW": '\033[93m',
+    "RED": '\033[91m',
+    "BOLD": '\033[1m',
+    "UNDERLINE": '\033[4m',
+    "END": '\033[0m'
+}
+
+RAND_COLOR = {
+    "PURPLE": '\033[95m',
+    "CYAN": '\033[96m',
+    "DARKCYAN": '\033[36m',
+    "BLUE": '\033[94m',
     "YELLOW": '\033[93m',
     "RED": '\033[91m'
 }
@@ -24,7 +37,7 @@ def print_color(string, color=None):
     elif color == "purple":
         print(f'{COLOR["PURPLE"]}{string}{COLOR["END"]}')
     elif color == "random":
-        print(f'{COLOR[random.choice(list(COLOR.keys()))]}{string}{COLOR["END"]}')
+        print(f'{RAND_COLOR[random.choice(list(RAND_COLOR.keys()))]}{string}{COLOR["END"]}')
     else:
         print(string)
 
@@ -43,6 +56,6 @@ def format_string(string, color=None):
     elif color == "purple":
         return f'{COLOR["PURPLE"]}{string}{COLOR["END"]}'
     elif color == "random":
-        return f'{COLOR[random.choice(list(COLOR.keys()))]}{string}{COLOR["END"]}'
+        return f'{RAND_COLOR[random.choice(list(RAND_COLOR.keys()))]}{string}{COLOR["END"]}'
     else:
         return string
